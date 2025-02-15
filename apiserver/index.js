@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./connectDB.js";
+import shortUrl from "./routes/url.routes.js";
 
 const app = express();
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(
 );
 
 // Routes
+app.use("/api", shortUrl);
 
 // Connection
 const PORT = process.env.PORT || 8000;

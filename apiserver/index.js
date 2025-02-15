@@ -1,19 +1,23 @@
 import express from "express";
-import { connectDB } from "./connection.js";
+import dotenv from "dotenv";
+import cors from "cors";
+import { connectDB } from "./connectDB.js";
 
 const app = express();
+dotenv.config();
 
 // Mongo DB Connections
-connectDB("mongodb://localhost:27017/short_url")
-  .then(() => {
-    console.log("Database Connected");
-  })
-  .catch((err) => {
-    console.error("Database Connection Error", err);
-  });
+connectDB(`${process.env.MONGO_CONNECTION_STRING}`);
 
 // Middleware Connections
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // Routes
 

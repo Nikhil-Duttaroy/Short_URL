@@ -3,11 +3,12 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header.component";
 import URLGeneration from "../components/URLGeneration.component";
 import URLTable from "../components/URLTable.component";
+import { ShortUrl } from "../lib/types";
 
 export default function Home() {
-  const [shortUrls, setShortUrls] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [shortUrls, setShortUrls] = useState<ShortUrl[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchShortUrls = async () => {
@@ -32,7 +33,7 @@ export default function Home() {
     fetchShortUrls();
   }, []);
 
-  const addShortUrl = (newUrl) => {
+  const addShortUrl = (newUrl: ShortUrl) => {
     setShortUrls((prevUrls) => [...prevUrls, newUrl]);
   };
 

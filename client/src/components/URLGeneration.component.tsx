@@ -1,49 +1,56 @@
 import React, { useState, useCallback } from "react";
+import { ShortUrl, URLGenerationProps } from "../lib/types";
 
-const URLGeneration = ({ addShortUrl }) => {
-  const [url, setUrl] = useState("");
-  const [shortenedUrl, setShortenedUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+const URLGeneration: React.FC<URLGenerationProps> = ({ addShortUrl }) => {
+  const [url, setUrl] = useState<string>("");
+  const [shortenedUrl, setShortenedUrl] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APISERVER_URL}/url`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ fullUrl: url }),
-        }
-      );
-      const data = await response.json();
-      if (response.ok) {
-        const { shortUrl } = data;
-        const newShortUrl = {
-          fullUrl: url,
-          shortUrl: shortUrl.shortUrl,
-          visitHistory: [],
-        };
-        setShortenedUrl(
-          `${process.env.NEXT_PUBLIC_APISERVER_URL}/url/${shortUrl.shortUrl}`
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_APISERVER_URL}/url`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ fullUrl: url }),
+          }
         );
-        setUrl("");
-        addShortUrl(newShortUrl);
-      } else {
-        setError("Failed to shorten URL");
+        const data = await response.json();
+        if (response.ok) {
+          const newShortUrl: ShortUrl = {
+            _id: data.shortUrl._id,
+            fullUrl: url,
+            shortUrl: data.shortUrl.shortUrl,
+            visitHistory: [],
+            createdAt: data.shortUrl.createdAt,
+            updatedAt: data.shortUrl.updatedAt,
+            __v: data.shortUrl.__v,
+          };
+          setShortenedUrl(
+            `${process.env.NEXT_PUBLIC_APISERVER_URL}/url/${data.shortUrl.shortUrl}`
+          );
+          setUrl("");
+          addShortUrl(newShortUrl);
+        } else {
+          setError("Failed to shorten URL");
+        }
+      } catch (error) {
+        setError("Error shortening URL");
+        console.error("Error shortening URL:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setError("Error shortening URL");
-      console.error("Error shortening URL:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [url, addShortUrl]);
+    },
+    [url, addShortUrl]
+  );
 
   return (
     <div className="flex flex-col items-center w-full max-w-md">

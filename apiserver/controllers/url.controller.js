@@ -19,7 +19,9 @@ export const handleGetAllUrl = async (req, res) => {
   try {
     const shortUrls = await URL.find();
     if (shortUrls.length <= 0) {
-      return res.status(404).send({ message: "No URLs Found" });
+      return res
+        .status(200)
+        .send({ success: true, message: "No URLs Found", shortUrls: [] });
     }
     res.status(200).send({ success: true, shortUrls });
   } catch (err) {
@@ -46,7 +48,7 @@ export const handleGetUrl = async (req, res) => {
     );
 
     if (!entry) {
-      return res.status(404).send({ message: "URL Not Found" });
+      return res.status(200).send({ success: true, message: "URL Not Found" });
     }
 
     res.redirect(entry.fullUrl);

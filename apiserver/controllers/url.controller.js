@@ -6,7 +6,15 @@ export const handleShortUrlGeneration = async (req, res) => {
     if (!fullUrl) {
       return res.status(400).send({ message: "Full URL is required" });
     }
-    const shortUrl = await URL.create({ fullUrl });
+
+    const userUrls = await URL.find({ userId: req.user._id });
+    if (userUrls.length >= 5 && !req.user) {
+      return res
+        .status(403)
+        .send({ message: "Login required to create more than 5 URLs" });
+    }
+
+    const shortUrl = await URL.create({ fullUrl, userId: req.user._id });
     res.status(201).send({ success: true, shortUrl });
   } catch (err) {
     res
@@ -17,7 +25,7 @@ export const handleShortUrlGeneration = async (req, res) => {
 
 export const handleGetAllUrl = async (req, res) => {
   try {
-    const shortUrls = await URL.find();
+    const shortUrls = await URL.find({ userId: req.user._id });
     if (shortUrls.length <= 0) {
       return res
         .status(200)
@@ -38,10 +46,7 @@ export const handleGetUrl = async (req, res) => {
       { shortUrl: id },
       {
         $push: {
-          visitHistory: {
-            timestamps: new Date().toString(),
-            ip: req.ip,
-          },
+          visitHistory: { timestamps: new Date().toString(), ip: req.ip },
         },
       },
       { new: true }

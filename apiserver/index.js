@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./connectDB.js";
 import shortUrl from "./routes/url.routes.js";
+import authRoutes from "./routes/auth.routes.js";
 
 const app = express();
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(
 
 // Routes
 app.use("/api", shortUrl);
+app.use("/api/auth", authRoutes);
 
 // Connection
 const PORT = process.env.PORT || 8000;

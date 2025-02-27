@@ -15,6 +15,7 @@ const urlSchema = new mongoose.Schema(
       default: () => nanoid(8),
     },
     visitHistory: [{ timestamps: { type: String }, ip: { type: String } }],
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

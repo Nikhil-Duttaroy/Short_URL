@@ -1,12 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Header from "../components/Header.component";
 import URLGeneration from "../components/URLGeneration.component";
 import URLTable from "../components/URLTable.component";
 import { ShortUrl } from "../lib/types";
-import axios from "axios";
+import withAuth from "../components/withAuth.components";
 
-export default function Home() {
+const Home: React.FC = () => {
   const [shortUrls, setShortUrls] = useState<ShortUrl[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,4 +49,6 @@ export default function Home() {
       </main>
     </div>
   );
-}
+};
+
+export default withAuth(Home);

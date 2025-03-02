@@ -4,6 +4,7 @@ import axios from "axios";
 import Header from "../components/Header.component";
 import URLGeneration from "../components/URLGeneration.component";
 import URLTable from "../components/URLTable.component";
+import Loader from "../components/Loader.component";
 import { ShortUrl } from "../lib/types";
 import withAuth from "../components/withAuth.components";
 
@@ -45,7 +46,13 @@ const Home: React.FC = () => {
       <Header />
       <main className="flex flex-col items-center justify-center h-full">
         <URLGeneration addShortUrl={addShortUrl} />
-        <URLTable shortUrls={shortUrls} loading={loading} error={error} />
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : (
+          <URLTable shortUrls={shortUrls} loading={loading} error={error} />
+        )}
       </main>
     </div>
   );

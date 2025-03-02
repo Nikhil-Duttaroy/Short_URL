@@ -4,13 +4,12 @@
 
 :root {
   --dark-background: #050505;
-  --primary-background:#101010;
-  --secondary-background:#191919;
+  --primary-background: #101010;
+  --secondary-background: #191919;
   --primary-foreground: #E6E6E6;
-  --secondary-foreground:#999999;
-  --primary-accent:#916CE7;
-  --primary-border:#ffffff1b;
-  
+  --secondary-foreground: #999999;
+  --primary-accent: #916CE7;
+  --primary-border: #ffffff1b;
 }
 
 body {
@@ -19,6 +18,21 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   cursor: default;
 }
+
 ::-webkit-scrollbar {
   display: none;
+}
+
+.loader {
+  border-top-color: var(--primary-accent);
+  animation: spinner 1.5s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

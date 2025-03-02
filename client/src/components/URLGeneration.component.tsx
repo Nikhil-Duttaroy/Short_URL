@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { ShortUrl, URLGenerationProps } from "../lib/types";
+import axios from "axios";
 
 const URLGeneration: React.FC<URLGenerationProps> = ({ addShortUrl }) => {
   const [url, setUrl] = useState<string>("");
@@ -13,29 +14,29 @@ const URLGeneration: React.FC<URLGenerationProps> = ({ addShortUrl }) => {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(
+        const token = localStorage.getItem("token");
+        const response = await axios.post(
           `${process.env.NEXT_PUBLIC_APISERVER_URL}/url`,
+          { fullUrl: url },
           {
-            method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ fullUrl: url }),
           }
         );
-        const data = await response.json();
-        if (response.ok) {
+        if (response.data.success) {
           const newShortUrl: ShortUrl = {
-            _id: data.shortUrl._id,
+            _id: response.data.shortUrl._id,
             fullUrl: url,
-            shortUrl: data.shortUrl.shortUrl,
+            shortUrl: response.data.shortUrl.shortUrl,
             visitHistory: [],
-            createdAt: data.shortUrl.createdAt,
-            updatedAt: data.shortUrl.updatedAt,
-            __v: data.shortUrl.__v,
+            createdAt: response.data.shortUrl.createdAt,
+            updatedAt: response.data.shortUrl.updatedAt,
+            __v: response.data.shortUrl.__v,
           };
           setShortenedUrl(
-            `${process.env.NEXT_PUBLIC_APISERVER_URL}/url/${data.shortUrl.shortUrl}`
+            `${process.env.NEXT_PUBLIC_APISERVER_URL}/url/${response.data.shortUrl.shortUrl}`
           );
           setUrl("");
           addShortUrl(newShortUrl);

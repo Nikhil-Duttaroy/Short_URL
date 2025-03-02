@@ -4,6 +4,7 @@ import Header from "../components/Header.component";
 import URLGeneration from "../components/URLGeneration.component";
 import URLTable from "../components/URLTable.component";
 import { ShortUrl } from "../lib/types";
+import axios from "axios";
 
 export default function Home() {
   const [shortUrls, setShortUrls] = useState<ShortUrl[]>([]);
@@ -13,15 +14,16 @@ export default function Home() {
   useEffect(() => {
     const fetchShortUrls = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_APISERVER_URL}/url`
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_APISERVER_URL}/url`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        const data = await response.json();
-        if (response.ok) {
-          setShortUrls(data.shortUrls);
-        } else {
-          setError("Failed to fetch URLs");
-        }
+        setShortUrls(response.data.shortUrls);
       } catch (error) {
         setError("Error fetching short URLs");
         console.error("Error fetching short URLs:", error);

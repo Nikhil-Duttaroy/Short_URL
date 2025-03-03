@@ -42,20 +42,22 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-darkBackground text-primaryForeground">
+    <div className="h-screen w-full bg-darkBackground text-primaryForeground justify-center items-center flex flex-col">
       <Header />
-      <main className="flex flex-col items-center justify-center h-full">
+      <main className="flex flex-col items-center justify-center h-full w-full max-w-4xl mx-auto">
         <URLGeneration addShortUrl={addShortUrl} />
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <p className="text-red-500">{error}</p>
-        ) : (
-          <URLTable shortUrls={shortUrls} loading={loading} error={error} />
-        )}
+        <div className="min-h-[200px] w-full flex items-center justify-center">
+          {loading ? (
+            <Loader />
+          ) : error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <URLTable shortUrls={shortUrls} loading={loading} error={error} />
+          )}
+        </div>
       </main>
     </div>
   );
 };
 
-export default withAuth(Home);
+export default withAuth(Home, true);

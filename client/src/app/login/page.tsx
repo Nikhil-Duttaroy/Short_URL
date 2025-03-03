@@ -4,15 +4,16 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header.component";
 import Loader from "../../components/Loader.component";
+import withAuth from "@/components/withAuth.components";
 
-export default function Login() {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -103,3 +104,5 @@ export default function Login() {
     </div>
   );
 }
+
+export default withAuth(Login, false);

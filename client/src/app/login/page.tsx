@@ -59,10 +59,10 @@ function Login() {
             <Loader />
           ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <div>
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-primaryForeground"
+                  className="block text-base font-medium text-primaryForeground"
                 >
                   Username
                 </label>
@@ -72,13 +72,14 @@ function Login() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  className="w-full px-3 py-2 mt-1 border rounded-md bg-secondaryBackground text-primaryForeground"
+                  placeholder="JohnDoe@email.com"
+                  className="w-full p-3 mb-4 border-2 border-primaryBorder rounded-md bg-primaryBackground text-primaryForeground focus:outline-none focus:border-primaryAccent"
                 />
               </div>
-              <div>
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-primaryForeground"
+                  className="block text-base font-medium text-primaryForeground"
                 >
                   Password
                 </label>
@@ -88,12 +89,14 @@ function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-3 py-2 mt-1 border rounded-md bg-secondaryBackground text-primaryForeground"
+                  placeholder="********"
+                  className="w-full p-3 mb-4 border-2 border-primaryBorder rounded-md bg-primaryBackground text-primaryForeground focus:outline-none focus:border-primaryAccent"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full px-4 py-2 text-white bg-primaryAccent rounded-md"
+                className="w-full px-4 py-2 text-white bg-primaryAccent rounded-md hover:bg-primaryAccent/20 transition-colors disabled:bg-gray-300 disabled:text-black "
+                disabled={!username || !password}
               >
                 Login
               </button>

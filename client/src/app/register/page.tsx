@@ -11,11 +11,61 @@ function Register() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const router = useRouter();
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+    return passwordRegex.test(password);
+  };
+
+  const handleEmailBlur = () => {
+    if (!validateEmail(username)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    if (!validatePassword(password)) {
+      setPasswordError(
+        "Password must be at least 6 characters long and include a special character and a number"
+      );
+    } else {
+      setPasswordError("");
+    }
+  };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
+
+    if (!validateEmail(username)) {
+      setEmailError("Invalid email address");
+      setLoading(false);
+      return;
+    } else {
+      setEmailError("");
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        "Password must be at least 6 characters long and include a special character and a number"
+      );
+      setLoading(false);
+      return;
+    } else {
+      setPasswordError("");
+    }
+
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_APISERVER_URL}/auth/register`,
@@ -61,26 +111,31 @@ function Register() {
             <Loader />
           ) : (
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <div>
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-primaryForeground"
+                  className="block text-base font-medium text-primaryForeground"
                 >
-                  Username
+                  Email
                 </label>
                 <input
                   type="text"
                   id="username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  onBlur={handleEmailBlur}
                   required
-                  className="w-full px-3 py-2 mt-1 border rounded-md bg-secondaryBackground text-primaryForeground"
+                  placeholder="JohnDoe@email.com"
+                  className="w-full p-3 mb-4 border-2 border-primaryBorder rounded-md bg-primaryBackground text-primaryForeground focus:outline-none focus:border-primaryAccent"
                 />
+                {emailError && (
+                  <p className="text-red-500 -mt-4">{emailError}</p>
+                )}
               </div>
-              <div>
+              <div className="flex flex-col gap-2">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-primaryForeground"
+                  className="block text-base font-medium text-primaryForeground"
                 >
                   Password
                 </label>
@@ -89,13 +144,21 @@ function Register() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onBlur={handlePasswordBlur}
                   required
-                  className="w-full px-3 py-2 mt-1 border rounded-md bg-secondaryBackground text-primaryForeground"
+                  placeholder="********"
+                  className="w-full p-3 mb-4 border-2 border-primaryBorder rounded-md bg-primaryBackground text-primaryForeground focus:outline-none focus:border-primaryAccent"
                 />
+                {passwordError && (
+                  <p className="text-red-500 -mt-4">{passwordError}</p>
+                )}
               </div>
               <button
                 type="submit"
-                className="w-full px-4 py-2 text-white bg-primaryAccent rounded-md"
+                className="w-full px-4 py-2 text-white bg-primaryAccent rounded-md hover:bg-primaryAccent/20 transition-colors disabled:bg-gray-300 disabled:text-black"
+                disabled={
+                  !username || !password || !!emailError || !!passwordError
+                }
               >
                 Register
               </button>
@@ -107,4 +170,4 @@ function Register() {
   );
 }
 
-export default withAuth(Register, false); 
+export default withAuth(Register, false);

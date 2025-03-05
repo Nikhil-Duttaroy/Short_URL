@@ -42,9 +42,9 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-darkBackground text-primaryForeground justify-center items-center flex flex-col">
+    <div className="h-dvh w-full bg-darkBackground text-primaryForeground justify-center items-center flex flex-col ">
       <Header />
-      <main className="flex flex-col items-center justify-center h-full w-full max-w-5xl mx-auto">
+      <main className="flex flex-col items-center justify-center h-full w-full max-w-5xl mx-auto px-8 md:px-2">
         <URLGeneration addShortUrl={addShortUrl} />
         <div className="min-h-[200px] w-full flex items-center justify-center">
           {loading ? (

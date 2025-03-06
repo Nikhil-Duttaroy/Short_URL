@@ -1,5 +1,5 @@
 import { ShortUrl } from "@/lib/types";
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 interface FetcherResponse {
   success?: boolean;
@@ -7,6 +7,14 @@ interface FetcherResponse {
   token?: string | undefined;
   message?: string | undefined;
   shortUrl?: ShortUrl | undefined;
+}
+
+// Add interfaces for error response structure
+interface ErrorResponse {
+  message?: string;
+  error?: {
+    message?: string;
+  } | string;
 }
 
 export async function fetcher(
@@ -29,29 +37,43 @@ export async function fetcher(
       headers,
     });
 
-    if (response.status < 200 && response.status > 300) {
+    if (response.status < 200 || response.status >= 300) {
       const err = new Error("Error fetching data");
       const customError = err as Error & { status?: number };
       customError.status = response.status;
       throw customError;
-      throw err;
     }
-    console.log("🚀 ~ respoaaanse:", response.data)
+    console.log("🚀 ~ respoaaanse:", response.data);
 
     return response.data;
-  } catch (err:any) {
-    if (err.response?.status === 401) {
-      if(localStorage.getItem("authToken")){
-
-        localStorage.removeItem("token");
-        window.location.href = "/login";
+  } catch (err: unknown) {
+    if (axios.isAxiosError(err)) {
+      const axiosError = err as AxiosError<ErrorResponse>;
+      
+      if (axiosError.response?.status === 401) {
+        if (localStorage.getItem("token")) {
+          localStorage.removeItem("token");
+          window.location.href = "/login";
+        }
       }
+      
+      // Handle the error message with proper type checking
+      let errorMessage: string | undefined;
+      const responseData = axiosError.response?.data;
+      
+      if (responseData) {
+        errorMessage = responseData.message 
+          || (typeof responseData.error === 'object' && responseData.error?.message) 
+          || (typeof responseData.error === 'string' ? responseData.error : undefined);
+      }
+      
+      console.log(errorMessage);
+      
+      return axiosError.response?.data as FetcherResponse;
+    } else {
+      // Handle non-Axios errors
+      console.log("Unexpected error:", err);
+      return undefined;
     }
-    const error =
-      err?.response?.data?.message ||
-      err?.response?.data?.error?.message ||
-      err?.response?.data?.error;
-    console.log(error);
-    return err.response;
   }
 }

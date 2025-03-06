@@ -37,11 +37,11 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="h-dvh w-full bg-darkBackground text-primaryForeground justify-center items-center flex flex-col ">
+    <div className="h-full w-full bg-darkBackground text-primaryForeground justify-center items-center flex flex-col ">
       <Header />
-      <main className="flex flex-col items-center justify-center h-full w-full max-w-5xl mx-auto px-8 md:px-2">
+      <main className="flex flex-col justify-center items-center h-full w-full max-w-5xl mx-auto px-8 md:px-2 py-8 md:py-4">
         <URLGeneration addShortUrl={addShortUrl} />
-        <div className="min-h-[200px] w-full flex items-center justify-center">
+        <div className="min-h-[200px] w-full flex items-center justify-center overflow-scroll">
           {loading ? (
             <Loader />
           ) : error ? (

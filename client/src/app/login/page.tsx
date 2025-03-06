@@ -70,7 +70,12 @@ function Login() {
   return (
     <div className="h-screen w-full bg-darkBackground text-primaryForeground">
       <Header />
-      <main className="flex flex-col items-center justify-center h-full px-8 md:px-2">
+      <main className="flex flex-col items-center justify-center h-full px-8 md:px-2 gap-6">
+        <h1 className="text-2xl font-bold text-center text-primaryAccent">
+          Simplify your links and track their performance effortlessly.
+          <br />
+          Join us now!
+        </h1>
         <div className="w-full max-w-md p-8 space-y-8 bg-primaryBackground rounded shadow-md">
           <h2 className="text-2xl font-bold text-center text-primaryAccent">
             Login

@@ -18,8 +18,8 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="w-full p-4 bg-primaryBackground text-primaryForeground flex justify-between items-center">
-      <h1 className="text-2xl font-bold">Short URL</h1>
+    <header className="w-full p-4 max-h-fit bg-primaryBackground text-primaryForeground flex justify-between items-center">
+      <h1 className="text-2xl font-bold">Shorten Url</h1>
       <nav>
         {isLoggedIn ? (
           <button

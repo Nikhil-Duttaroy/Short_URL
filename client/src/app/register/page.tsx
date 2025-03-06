@@ -1,10 +1,10 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Header from "../../components/Header.component";
 import Loader from "../../components/Loader.component";
 import withAuth from "@/components/withAuth.components";
+import { fetcher } from "../../utils/fetcher";
 
 function Register() {
   const [username, setUsername] = useState<string>("");
@@ -86,33 +86,22 @@ function Register() {
       }
 
       try {
-        const response = await axios.post(
+        const response = await fetcher(
           `${process.env.NEXT_PUBLIC_APISERVER_URL}/auth/register`,
-          { username, password },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          "post",
+          { username, password }
         );
 
-        if (response.data.success) {
-          localStorage.setItem("token", response.data.token);
+        if (response?.success) {
+          if (response?.token) localStorage.setItem("token", response.token);
           router.push("/");
         } else {
           setError(
-            response.data.message || "Registration failed. Please try again."
+            response?.message || "Registration failed. Please try again."
           );
         }
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          setError(
-            err.response?.data?.message ||
-              "An error occurred. Please try again."
-          );
-        } else {
-          setError("An error occurred. Please try again.");
-        }
+      } catch {
+        setError("An error occurred. Please try again.");
       } finally {
         setLoading(false);
       }

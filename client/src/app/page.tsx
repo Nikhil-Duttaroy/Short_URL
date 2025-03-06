@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Header from "../components/Header.component";
 import URLGeneration from "../components/URLGeneration.component";
 import URLTable from "../components/URLTable.component";
 import Loader from "../components/Loader.component";
 import { ShortUrl } from "../lib/types";
 import withAuth from "../components/withAuth.components";
+import { fetcher } from "@/utils/fetcher";
 
 const Home: React.FC = () => {
   const [shortUrls, setShortUrls] = useState<ShortUrl[]>([]);
@@ -16,16 +16,11 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchShortUrls = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
+        const response = await fetcher(
           `${process.env.NEXT_PUBLIC_APISERVER_URL}/url`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          "get"
         );
-        setShortUrls(response.data.shortUrls);
+        setShortUrls(response?.shortUrls || []);
       } catch (error) {
         setError("Error fetching short URLs");
         console.error("Error fetching short URLs:", error);

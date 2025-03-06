@@ -15,7 +15,7 @@ connectDB(`${process.env.MONGO_CONNECTION_STRING}`);
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  max: 50, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   message: "Too many requests from this IP, please try again after 15 minutes",
   skip: (req) => req.path === "/url/:id",
   handler: (req, res) => {
@@ -47,7 +47,7 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
-app.use(limiter);
+// app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

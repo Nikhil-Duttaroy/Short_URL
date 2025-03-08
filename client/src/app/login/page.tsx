@@ -123,7 +123,7 @@ function Login() {
               className="w-full px-4 py-2 text-white bg-primaryAccent rounded-md hover:bg-primaryAccent/20 transition-colors disabled:bg-gray-300 disabled:text-black"
               disabled={!username || !password || !!emailError}
             >
-              {loading ? <Loader /> : "Login"}
+              {loading ? <Loader size="sm" /> : "Login"}
             </button>
           </form>
         </div>

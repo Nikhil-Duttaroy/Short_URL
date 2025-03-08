@@ -43,7 +43,7 @@ const Home: React.FC = () => {
         <URLGeneration addShortUrl={addShortUrl} />
         <div className="min-h-[200px] w-full flex items-center justify-center overflow-scroll">
           {loading ? (
-            <Loader />
+            <Loader size="lg" />
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (

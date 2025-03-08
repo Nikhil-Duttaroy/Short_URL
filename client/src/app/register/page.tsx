@@ -219,7 +219,7 @@ function Register() {
                 !!reEnterPasswordError
               }
             >
-              {loading ? <Loader /> : "Register"}
+              {loading ? <Loader size="sm" /> : "Register"}
             </button>
           </form>
         </div>

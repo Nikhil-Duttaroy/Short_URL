@@ -31,7 +31,7 @@ const withAuth = <P extends object>(
     if (loading) {
       return (
         <div className="h-screen w-full bg-darkBackground text-primaryForeground justify-center items-center flex flex-col">
-          <Loader />
+          <Loader size="lg" />
         </div>
       );
     }
